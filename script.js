@@ -9,15 +9,35 @@ const backDrop = document.getElementById('modalBackDrop');
 const eventTitleInput = document.getElementById('eventTitleInput');
 const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
+const charCount = document.getElementById('charCount');
+const maxLength = 40;
+
+eventTitleInput.addEventListener('input', () => {
+  const remaining = maxLength - eventTitleInput.value.length;
+  charCount.innerText = `${remaining} characters remaining`;
+});
+
 function openModal(date) {
   clicked = date;
-
   const eventForDay = events.find(e => e.date === clicked);
+  
+  // Format the date for display
+  const formattedDate = new Date(clicked).toLocaleDateString('en-US', {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+  });
 
   if (eventForDay) {
-    document.getElementById('eventText').innerText = eventForDay.title;
+    // When opening delete modal for an existing event
+    document.querySelector('#deleteEventModal h2').innerText = formattedDate; // Set title to the formatted date
+    document.getElementById('eventText').innerText = eventForDay.title; // Set the event title
     deleteEventModal.style.display = 'block';
   } else {
+    // Reset for new event modal
+    document.querySelector('#newEventModal h2').innerText = `New Event on ${formattedDate}`; // Set title with the date
+    eventTitleInput.value = ''; 
+    charCount.innerText = '40 characters remaining'; 
     newEventModal.style.display = 'block';
   }
 
@@ -90,6 +110,13 @@ function closeModal() {
   clicked = null;
   load();
 }
+
+// Add event listener for Enter key
+eventTitleInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    saveEvent();
+  }
+});
 
 function saveEvent() {
   if (eventTitleInput.value) {
