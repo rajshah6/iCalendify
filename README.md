@@ -15,7 +15,7 @@
 
 ## Installation
 
-To get started with iCalendify, follow these steps:
+To run the app locally, follow these steps:
 
 **Clone the repository:**
 
